@@ -264,3 +264,55 @@ code {
 .feed-entry:nth-child(6) { animation-delay: 150ms; }
 .feed-entry:nth-child(7) { animation-delay: 180ms; }
 .feed-entry:nth-child(8) { animation-delay: 210ms; }
+
+/* ── Mission Banner ── */
+.mission-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  height: 32px;
+  background: linear-gradient(90deg, rgba(30, 190, 241, 0.08) 0%, transparent 60%);
+  border-bottom: 1px solid rgba(30, 190, 241, 0.08);
+  display: flex;
+  align-items: center;
+}
+
+/* ── Standup Slide-in ── */
+@keyframes standupSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.standup-slide-in {
+  animation: standupSlideIn 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Standup Item ── */
+.standup-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: var(--mc-card);
+  transition: border-color 150ms ease;
+}
+
+.standup-item:hover {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+:root .standup-item {
+  border-color: rgba(0, 0, 0, 0.04);
+  background: var(--mc-card);
+}
+
+:root .standup-item:hover {
+  border-color: rgba(0, 0, 0, 0.08);
+}
