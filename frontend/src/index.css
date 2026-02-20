@@ -220,3 +220,47 @@ code {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* ── Feed Entry ── */
+.feed-entry {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background-color 150ms ease;
+}
+
+.feed-entry:hover {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+:root .feed-entry {
+  border-bottom-color: rgba(0, 0, 0, 0.04);
+}
+
+:root .feed-entry:hover {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+/* ── Feed entry stagger animation ── */
+@keyframes feedFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.feed-entry {
+  animation: feedFadeIn 200ms ease-out both;
+}
+
+.feed-entry:nth-child(1) { animation-delay: 0ms; }
+.feed-entry:nth-child(2) { animation-delay: 30ms; }
+.feed-entry:nth-child(3) { animation-delay: 60ms; }
+.feed-entry:nth-child(4) { animation-delay: 90ms; }
+.feed-entry:nth-child(5) { animation-delay: 120ms; }
+.feed-entry:nth-child(6) { animation-delay: 150ms; }
+.feed-entry:nth-child(7) { animation-delay: 180ms; }
+.feed-entry:nth-child(8) { animation-delay: 210ms; }
