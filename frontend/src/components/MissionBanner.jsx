@@ -49,7 +49,7 @@ const MissionBanner = () => {
       {editing && (
         <div
           data-testid="mission-edit-modal-overlay"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 backdrop-blur-sm"
           onClick={(e) => { if (e.target === e.currentTarget) cancel(); }}
         >
           <div
