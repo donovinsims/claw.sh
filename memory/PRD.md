@@ -1,42 +1,29 @@
 # Mission Control Dashboard — PRD
 
 ## Original Problem Statement
-Build a Mission Control dashboard web app for managing a team of AI agents (OpenClaw system). 3-panel desktop layout, dark mode default, with hardcoded mock data. Reference screenshots provided for visual style.
+Build a Mission Control dashboard web app for managing a team of AI agents (OpenClaw system). 3-panel desktop layout, dark mode default, with hardcoded mock data.
 
 ## Architecture
 - **Stack**: React + Tailwind CSS (CRA-based), no backend
-- **Theming**: CSS custom properties (`--mc-*` variables) with `dark` class toggle
-- **Fonts**: JetBrains Mono (monospace headers/stats), DM Sans (body)
-- **Components**: TopBar, AgentsPanel, MissionQueue (TaskCard), LiveFeed (FeedEntry, AgentActivityGrid)
-- **DnD**: HTML5 native Drag and Drop API (zero dependencies)
-
-## User Personas
-- Solo founder/operator monitoring an AI agent system (OpenClaw) daily
-- Needs at-a-glance status of agents, task pipeline, and activity feed
-
-## Core Requirements (Static)
-1. Top bar: logo, stat counters, live clock, online pill, theme toggle
-2. Left panel (240px): scrollable agent list with icons, role badges, status dots
-3. Center panel: Kanban board — 5 columns with drag-and-drop task cards
-4. Right panel (320px): Live Feed with filtered activity stream + agent grid
-5. Dark mode default, light mode via toggle
+- **Theming**: CSS custom properties (`--mc-*`) with `dark` class toggle
+- **Fonts**: JetBrains Mono (monospace), DM Sans (body)
+- **Components**: MissionBanner, TopBar, AgentsPanel, MissionQueue (TaskCard), LiveFeed (FeedEntry, AgentActivityGrid), StandupPanel
 
 ## What's Been Implemented
-- **Phase 1A** (Jan 2026): 3-panel structure — 15/15 tests passed
-- **Phase 2** (Jan 2026): Kanban task cards — 13/13 tests passed
-  - 16 tasks across 5 columns, DnD, inline expansion, dynamic counts
-- **Phase 3** (Jan 2026): Live Feed intelligence stream — 14/14 tests passed
-  - 30 activity events across 6 types: task_created, task_moved, comment, decision, doc, status_update
-  - FeedEntry component: agent avatar, name, action verb, target, detail text, timestamp, color-coded type icon
-  - Tab filtering with dynamic counts (All/Tasks/Comments/Decisions/Docs/Status)
-  - Staggered fade-in animation, smooth scroll, auto-scroll on tab switch
-  - Agent Activity Grid: all 10 agents with status dots and active task counts
+- **Phase 1A**: 3-panel structure (Agents 240px, Kanban center, Live Feed 320px) — 15/15 passed
+- **Phase 2**: 16 kanban task cards with DnD, inline expansion, dynamic counts — 13/13 passed
+- **Phase 3**: 30 feed events, tab filtering, agent activity grid — 14/14 passed
+- **UI Pack A** (Jan 2026):
+  - **Demo Pulse**: Toggle in Live Feed header, generates random feed events every 30-60s, caps at 60, feed-only (no kanban mutation), proper cleanup on unmount/toggle off
+  - **Mission Banner**: Gradient banner above top bar (#1EBEF1/8%), editable via modal, local state
+  - **Daily Standup**: Slide-over panel (28px radius), 5 sections (Completed/In Progress/Blocked/Needs Review/Key Decisions), ESC key close, backdrop blur
+  - Fixed z-index overlay issue with Emergent badge (z-10000+)
+  - All tests passing: banner, modal, standup open/close/dismiss/ESC, pulse toggle, no regressions
 
 ## Prioritized Backlog
 ### P0 — Design Polish
 - Light mode refinement
 - Responsive/mobile layout
-- Enhanced micro-animations
 
 ### P1 — Backend Integration
 - Convex real-time database connection
