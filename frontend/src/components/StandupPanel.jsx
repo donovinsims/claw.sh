@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { X, CheckCircle2, Loader2, AlertTriangle, Eye, Zap } from "lucide-react";
 import { standupData } from "@/data/mockData";
 
