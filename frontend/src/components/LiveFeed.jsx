@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import {
   Plus,
   ArrowRight,
@@ -7,14 +7,16 @@ import {
   FileText,
   Activity,
   Clock,
+  Radio,
 } from "lucide-react";
 import {
   liveFeedTabs,
-  feedEvents,
+  feedEvents as staticFeedEvents,
   tabFilterMap,
   agents,
   agentMap,
   initialTasks,
+  pulseTemplates,
 } from "@/data/mockData";
 
 const typeIcon = {
@@ -44,6 +46,43 @@ const typeLabel = {
   status_update: "Status",
 };
 
+const eventTypes = Object.keys(typeIcon);
+
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+let pulseCounter = 0;
+
+function generatePulseEvent() {
+  pulseCounter++;
+  const type = pick(eventTypes);
+  const agent = pick(agents);
+  const tpl = pulseTemplates[type]?.[0];
+  const id = `pulse-${Date.now()}-${pulseCounter}`;
+
+  const base = { id, type, agentId: agent.id, timestamp: "just now", sortOrder: 0 };
+
+  switch (type) {
+    case "task_created":
+      return { ...base, action: tpl.action, target: pick(tpl.targets) };
+    case "task_moved": {
+      const task = pick(initialTasks);
+      return { ...base, action: tpl.action, target: task.title, detail: pick(tpl.transitions) };
+    }
+    case "comment": {
+      const task = pick(initialTasks);
+      return { ...base, action: tpl.action, target: task.title, detail: pick(tpl.comments) };
+    }
+    case "decision":
+      return { ...base, action: tpl.action, target: pick(tpl.decisions) };
+    case "doc":
+      return { ...base, action: tpl.action, target: pick(tpl.docs) };
+    case "status_update":
+      return { ...base, action: Math.random() > 0.5 ? tpl.action : tpl.alt, target: "" };
+    default:
+      return { ...base, action: "updated", target: "something" };
+  }
+}
+
 const FeedEntry = ({ event }) => {
   const agent = agentMap[event.agentId];
   const Icon = typeIcon[event.type] || Activity;
@@ -55,19 +94,17 @@ const FeedEntry = ({ event }) => {
       className="feed-entry group"
     >
       <div className="flex gap-2.5">
-        {/* Avatar */}
         <div className="relative shrink-0">
           <div className="w-7 h-7 rounded-full bg-[var(--mc-card)] border border-white/[0.06] flex items-center justify-center">
             <span className="text-[9px] font-bold text-[var(--mc-text-muted)] uppercase">
               {agent?.name?.charAt(0)}
             </span>
           </div>
-          <div className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[var(--mc-surface)] flex items-center justify-center`}>
+          <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[var(--mc-surface)] flex items-center justify-center">
             <Icon className={`w-2 h-2 ${accent}`} strokeWidth={2} />
           </div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 min-w-0 pt-0.5">
           <p className="text-[11px] leading-relaxed text-[var(--mc-text-muted)]">
             <span className="font-semibold text-[var(--mc-text-primary)]">
@@ -87,7 +124,6 @@ const FeedEntry = ({ event }) => {
             </p>
           )}
 
-          {/* Meta row */}
           <div className="flex items-center gap-2 mt-1.5">
             <span className={`font-mono text-[8px] tracking-wider uppercase ${accent} opacity-70`}>
               {typeLabel[event.type]}
@@ -110,11 +146,9 @@ const AgentActivityGrid = () => {
       const taskCount = initialTasks.filter(
         (t) => t.assigneeId === agent.id && t.column !== "done"
       ).length;
-      const lastEvent = feedEvents.find((e) => e.agentId === agent.id);
       return {
         ...agent,
         activeTasks: taskCount,
-        lastAction: lastEvent?.timestamp || "—",
       };
     });
   }, []);
@@ -154,29 +188,60 @@ const AgentActivityGrid = () => {
 
 const LiveFeed = () => {
   const [activeTab, setActiveTab] = useState("All");
+  const [pulseActive, setPulseActive] = useState(false);
+  const [allEvents, setAllEvents] = useState(staticFeedEvents);
   const scrollRef = useRef(null);
+  const intervalRef = useRef(null);
+
+  const togglePulse = useCallback(() => {
+    setPulseActive((prev) => !prev);
+  }, []);
+
+  useEffect(() => {
+    if (pulseActive) {
+      const scheduleNext = () => {
+        const delay = 30000 + Math.random() * 30000;
+        intervalRef.current = setTimeout(() => {
+          const newEvent = generatePulseEvent();
+          setAllEvents((prev) => [newEvent, ...prev].slice(0, 60));
+          if (scrollRef.current) scrollRef.current.scrollTop = 0;
+          scheduleNext();
+        }, delay);
+      };
+      scheduleNext();
+    } else {
+      if (intervalRef.current) {
+        clearTimeout(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+    return () => {
+      if (intervalRef.current) {
+        clearTimeout(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [pulseActive]);
 
   const filtered = useMemo(() => {
     const filterTypes = tabFilterMap[activeTab];
-    if (!filterTypes) return feedEvents;
-    return feedEvents.filter((e) => filterTypes.includes(e.type));
-  }, [activeTab]);
+    if (!filterTypes) return allEvents;
+    return allEvents.filter((e) => filterTypes.includes(e.type));
+  }, [activeTab, allEvents]);
 
   const tabCounts = useMemo(() => {
     const counts = {};
     for (const tab of liveFeedTabs) {
       const ft = tabFilterMap[tab];
       counts[tab] = ft
-        ? feedEvents.filter((e) => ft.includes(e.type)).length
-        : feedEvents.length;
+        ? allEvents.filter((e) => ft.includes(e.type)).length
+        : allEvents.length;
     }
     return counts;
-  }, []);
+  }, [allEvents]);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0;
-    }
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
   }, [activeTab]);
 
   return (
@@ -186,7 +251,7 @@ const LiveFeed = () => {
     >
       {/* Header */}
       <div
-        className="px-4 h-11 flex items-center gap-3 border-b border-[var(--mc-border)] shrink-0"
+        className="px-4 h-11 flex items-center gap-2 border-b border-[var(--mc-border)] shrink-0"
         data-testid="live-feed-header"
       >
         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -194,11 +259,26 @@ const LiveFeed = () => {
           Live Feed
         </span>
         <span className="flex-1" />
+
+        {/* Demo Pulse Toggle */}
+        <button
+          data-testid="demo-pulse-toggle"
+          onClick={togglePulse}
+          className={`flex items-center gap-1.5 font-mono text-[9px] tracking-wider px-2 py-1 rounded-full border transition-all duration-150 ${
+            pulseActive
+              ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400"
+              : "bg-transparent border-[var(--mc-border)] text-[var(--mc-text-muted)] hover:text-[var(--mc-text-primary)] hover:border-[var(--mc-text-muted)]/30"
+          }`}
+        >
+          <Radio className={`w-2.5 h-2.5 ${pulseActive ? "animate-pulse" : ""}`} strokeWidth={2} />
+          {pulseActive ? "LIVE" : "Pulse"}
+        </button>
+
         <span
-          className="font-mono text-[10px] text-[var(--mc-text-muted)] tabular-nums"
+          className="font-mono text-[10px] text-[var(--mc-text-muted)] tabular-nums ml-1"
           data-testid="live-feed-total-count"
         >
-          {feedEvents.length}
+          {allEvents.length}
         </span>
       </div>
 
@@ -219,13 +299,7 @@ const LiveFeed = () => {
             }`}
           >
             {tab}
-            <span
-              className={`text-[8px] tabular-nums ${
-                activeTab === tab
-                  ? "opacity-70"
-                  : "opacity-50"
-              }`}
-            >
+            <span className={`text-[8px] tabular-nums ${activeTab === tab ? "opacity-70" : "opacity-50"}`}>
               {tabCounts[tab]}
             </span>
           </button>
@@ -247,7 +321,7 @@ const LiveFeed = () => {
           </div>
         ) : (
           <div className="py-1" data-testid="feed-entries-list">
-            {filtered.map((event, i) => (
+            {filtered.map((event) => (
               <FeedEntry key={event.id} event={event} />
             ))}
           </div>
