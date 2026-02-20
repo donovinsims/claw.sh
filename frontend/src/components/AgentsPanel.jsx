@@ -32,7 +32,7 @@ const badgeStyles = {
   grey: "bg-zinc-500/15 text-zinc-400 border border-zinc-500/20",
 };
 
-const AgentsPanel = () => {
+const AgentsPanel = ({ onAgentClick }) => {
   const activeCount = agents.filter((a) => a.status === "WORKING").length;
 
   return (
@@ -59,10 +59,11 @@ const AgentsPanel = () => {
         {agents.map((agent) => {
           const Icon = iconMap[agent.icon];
           return (
-            <div
+            <button
               key={agent.id}
               data-testid={`agent-item-${agent.id}`}
-              className="px-4 py-3 border-b border-[var(--mc-border)] hover:bg-[var(--mc-card)] transition-colors cursor-default group"
+              onClick={() => onAgentClick?.(agent.id)}
+              className="w-full text-left px-4 py-3 border-b border-[var(--mc-border)] hover:bg-[var(--mc-card)] transition-colors cursor-pointer group"
             >
               <div className="flex items-start gap-3">
                 {/* Avatar */}
@@ -106,7 +107,7 @@ const AgentsPanel = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>
