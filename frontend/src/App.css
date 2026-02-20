@@ -12,5 +12,5 @@
   display: flex;
   flex: 1;
   overflow: hidden;
-  margin-top: 64px; /* top bar height */
+  margin-top: calc(32px + 64px); /* banner 32px + top bar 64px */
 }
