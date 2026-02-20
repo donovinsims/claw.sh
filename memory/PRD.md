@@ -4,10 +4,10 @@
 Build a Mission Control dashboard web app for managing a team of AI agents (OpenClaw system). 3-panel desktop layout, dark mode default, with hardcoded mock data. Reference screenshots provided for visual style.
 
 ## Architecture
-- **Stack**: React + Tailwind CSS (CRA-based), no backend for Phase 1-2
+- **Stack**: React + Tailwind CSS (CRA-based), no backend
 - **Theming**: CSS custom properties (`--mc-*` variables) with `dark` class toggle
 - **Fonts**: JetBrains Mono (monospace headers/stats), DM Sans (body)
-- **Components**: TopBar, AgentsPanel, MissionQueue (TaskCard), LiveFeed
+- **Components**: TopBar, AgentsPanel, MissionQueue (TaskCard), LiveFeed (FeedEntry, AgentActivityGrid)
 - **DnD**: HTML5 native Drag and Drop API (zero dependencies)
 
 ## User Personas
@@ -17,35 +17,37 @@ Build a Mission Control dashboard web app for managing a team of AI agents (Open
 ## Core Requirements (Static)
 1. Top bar: logo, stat counters, live clock, online pill, theme toggle
 2. Left panel (240px): scrollable agent list with icons, role badges, status dots
-3. Center panel: Kanban board — 5 columns (Inbox, Assigned, In Progress, Review, Done)
-4. Right panel (320px): Live Feed with filter tabs
+3. Center panel: Kanban board — 5 columns with drag-and-drop task cards
+4. Right panel (320px): Live Feed with filtered activity stream + agent grid
 5. Dark mode default, light mode via toggle
 
 ## What's Been Implemented
-- **Phase 1A** (Jan 2026): 3-panel structure complete — 15/15 tests passed
+- **Phase 1A** (Jan 2026): 3-panel structure — 15/15 tests passed
 - **Phase 2** (Jan 2026): Kanban task cards — 13/13 tests passed
-  - 16 realistic AI ops tasks distributed: Inbox(4), Assigned(4), In Progress(3), Review(3), Done(2)
-  - TaskCard component: title, description, assignee avatar, priority dot, tags, timestamp
-  - Click-to-expand inline detail view with role badge, priority badge, full metadata
-  - HTML5 drag-and-drop between columns with dynamic count updates
-  - Subtle card elevation, hover translateY, 150ms transitions
-  - Drop zone visual feedback
+  - 16 tasks across 5 columns, DnD, inline expansion, dynamic counts
+- **Phase 3** (Jan 2026): Live Feed intelligence stream — 14/14 tests passed
+  - 30 activity events across 6 types: task_created, task_moved, comment, decision, doc, status_update
+  - FeedEntry component: agent avatar, name, action verb, target, detail text, timestamp, color-coded type icon
+  - Tab filtering with dynamic counts (All/Tasks/Comments/Decisions/Docs/Status)
+  - Staggered fade-in animation, smooth scroll, auto-scroll on tab switch
+  - Agent Activity Grid: all 10 agents with status dots and active task counts
 
 ## Prioritized Backlog
-### P0 — Phase 3 (Live Feed)
-- Sample feed entries: comments, decisions, status changes, task assignments
-- Agent avatar grid with activity counts
-
-### P1 — Design Polish
+### P0 — Design Polish
 - Light mode refinement
 - Responsive/mobile layout
-- Enhanced animations
+- Enhanced micro-animations
 
-### P2 — Backend Integration
+### P1 — Backend Integration
 - Convex real-time database connection
 - Live agent status, task CRUD, feed streaming
 
+### P2 — Advanced Features
+- Cmd+K command palette
+- Task filtering by assignee/priority/tag
+- Real-time notifications
+
 ## Next Tasks
-1. Populate Live Feed with sample entries (Phase 3)
-2. Add agent activity grid to Live Feed
-3. Polish light mode theme
+1. Polish light mode theme
+2. Add responsive breakpoints
+3. Connect Convex for real-time data
