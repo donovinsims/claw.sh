@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Diamond, Sun, Moon } from "lucide-react";
+import { Diamond, Sun, Moon, ClipboardList } from "lucide-react";
 
-const TopBar = () => {
+const TopBar = ({ onStandupOpen }) => {
   const [time, setTime] = useState(new Date());
   const [isDark, setIsDark] = useState(true);
 
@@ -34,7 +34,7 @@ const TopBar = () => {
   return (
     <header
       data-testid="top-bar"
-      className="fixed top-0 left-0 right-0 z-50 h-16 border-b border-[var(--mc-border)] bg-[var(--mc-surface)] flex items-center px-5 gap-6"
+      className="fixed top-[32px] left-0 right-0 z-50 h-16 border-b border-[var(--mc-border)] bg-[var(--mc-surface)] flex items-center px-5 gap-6"
     >
       {/* Left: Logo */}
       <div className="flex items-center gap-3 shrink-0" data-testid="top-bar-logo">
@@ -70,8 +70,17 @@ const TopBar = () => {
         </div>
       </div>
 
-      {/* Right: Theme toggle + Clock + Status */}
-      <div className="flex items-center gap-5 shrink-0" data-testid="top-bar-right">
+      {/* Right: Standup + Theme toggle + Clock + Status */}
+      <div className="flex items-center gap-4 shrink-0" data-testid="top-bar-right">
+        <button
+          data-testid="standup-open-btn"
+          onClick={onStandupOpen}
+          className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider px-3 py-1.5 rounded-lg border border-[var(--mc-border)] text-[var(--mc-text-muted)] hover:text-[var(--mc-text-primary)] hover:bg-[var(--mc-card)] hover:border-[var(--mc-text-muted)]/30 transition-colors"
+        >
+          <ClipboardList className="w-3.5 h-3.5" strokeWidth={1.5} />
+          Standup
+        </button>
+
         <button
           data-testid="theme-toggle-btn"
           onClick={() => setIsDark(!isDark)}
