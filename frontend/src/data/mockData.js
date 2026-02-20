@@ -596,3 +596,51 @@ export const tabFilterMap = {
   Docs: ["doc"],
   Status: ["status_update"],
 };
+
+export const pulseTemplates = {
+  task_created: [
+    { action: "created", targets: ["Audit Landing Page CTA Performance","Draft LinkedIn Thought Leadership Plan","Benchmark Agent Response Latency","Map Customer Journey Friction Points","Create Retargeting Ad Variants","Build Feature Comparison Matrix","Write Release Notes — v2.4","Analyze Support Ticket Trends","Design Notification System Mockup","Plan Q2 Content Calendar"] },
+  ],
+  task_moved: [
+    { action: "moved", transitions: ["Inbox → Assigned","Assigned → In Progress","In Progress → Review","Review → Done","Inbox → In Progress"] },
+  ],
+  comment: [
+    { action: "commented on", comments: ["Solid progress here. Let's sync before pushing to review.","Data looks off on the third metric — double-checking source.","This needs a second pair of eyes before we ship.","Great find. Incorporating into the next sprint.","Blocked on API response from the vendor. Following up.","Copy is tight. One tweak on the headline and we're good.","Tested on staging — works as expected.","Can we get customer quotes for this section?","Edge case found during QA. Logging it now.","Alignment check: does this match the brand voice?"] },
+  ],
+  decision: [
+    { action: "decided", decisions: ["Delay launch by 24h to fix onboarding bug","Double down on organic over paid this quarter","Merge the two landing page variants into one","Switch from weekly to daily standup for this sprint","Deprioritize mobile until desktop conversion stabilizes","Add usage-based pricing tier for enterprise","Pause outbound campaigns until ICP is refined","Invest in documentation before next feature push"] },
+  ],
+  doc: [
+    { action: "published", docs: ["Agent Orchestration Playbook","Onboarding Flow Redesign Spec","Q1 Retrospective Summary","Competitive Landscape Report","Internal API Migration Guide","Brand Voice & Tone Guidelines","Customer Interview Synthesis","Performance Benchmarking Results"] },
+  ],
+  status_update: [
+    { action: "activated", alt: "went idle" },
+  ],
+};
+
+export const standupData = {
+  completed: [
+    { id: "s1", title: "API Docs — v2 Endpoints", agent: "Wong", detail: "Full REST documentation shipped with examples and error codes." },
+    { id: "s2", title: "Expansion Revenue Mechanics", agent: "Jarvis", detail: "Rob Walling's SaaS framework implemented. Upsell paths mapped." },
+  ],
+  inProgress: [
+    { id: "s3", title: "Competitor Comparison Page", agent: "Vision", detail: "Zendesk brief 80% done. Pulling final feature-by-feature data." },
+    { id: "s4", title: "Mission Control UI — Phase 2", agent: "Friday", detail: "Kanban DnD complete. Working on card expansion and polish." },
+    { id: "s5", title: "Customer Research — Tweet Material", agent: "Fury", detail: "3 customer quotes sourced from Slack. Need 2 more for pipeline." },
+  ],
+  blocked: [
+    { id: "s6", title: "Email Drip Sequence — Trial Users", agent: "Pepper", detail: "Blocked on Shuri's pricing data for email #3 personalization." },
+    { id: "s7", title: "Design System Token Refresh", agent: "Wanda", detail: "Waiting on final brand color sign-off from Jarvis." },
+  ],
+  needsReview: [
+    { id: "s8", title: "Blog Landing Page — Shopify", agent: "Loki", detail: "Copy complete. Needs SEO validation from Vision." },
+    { id: "s9", title: "Best AI Chatbot — Full Blog Post", agent: "Loki", detail: "2.5k words drafted. Pending final review pass." },
+    { id: "s10", title: "Email Strategy: Lifecycle Campaigns", agent: "Pepper", detail: "Userlist-inspired flows mapped. Needs Jarvis approval." },
+  ],
+  keyDecisions: [
+    { id: "s11", title: "Prioritize SEO audit before funnel rewrite", agent: "Jarvis", detail: "SEO baseline needed to measure funnel impact." },
+    { id: "s12", title: "Ship email drip before lifecycle campaigns", agent: "Jarvis", detail: "Trial activation is the bottleneck. Higher ROI." },
+    { id: "s13", title: "Keep pricing tiers, adjust feature gating", agent: "Shuri", detail: "Users hit limits on mid-tier. Expand limits, not price." },
+    { id: "s14", title: "All agents focus on Shopify content this sprint", agent: "Jarvis", detail: "Partnership launch in 2 weeks. All hands on deck." },
+  ],
+};
