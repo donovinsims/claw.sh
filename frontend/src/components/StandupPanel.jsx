@@ -20,6 +20,13 @@ const formatDate = () =>
     });
 
 const StandupPanel = ({ open, onClose }) => {
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   return (
@@ -27,14 +34,14 @@ const StandupPanel = ({ open, onClose }) => {
       {/* Backdrop */}
       <div
         data-testid="standup-backdrop"
-        className="fixed inset-0 z-[90] bg-black/40 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 z-[10000] bg-black/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Slide-over Panel */}
       <div
         data-testid="standup-panel"
-        className="fixed top-0 right-0 z-[95] h-full w-full max-w-[520px] standup-slide-in"
+        className="fixed top-0 right-0 z-[10001] h-full w-full max-w-[520px] standup-slide-in"
       >
         <div className="h-full bg-[var(--mc-surface)] border-l border-[var(--mc-border)] rounded-l-[28px] flex flex-col shadow-2xl overflow-hidden">
           {/* Header */}
